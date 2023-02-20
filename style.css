@@ -40,3 +40,14 @@ body {
     justify-content: space-between;
     align-items: center;
 }
+
+.card-hover:hover {
+    /* Other */
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.bg-success , .bg-danger {
+    /* Other */
+    color: rgba(255, 255, 255, 1);
+}
