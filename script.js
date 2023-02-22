@@ -64,30 +64,12 @@ function init() {
 
 // Show current question
 function showCurrentQuestion() {
-    if (currentQuestion >= questions.length) {  // If all 5 questions are answered -> show end screen (because 5 >= 5)
+    if (gameIsOver()) {  // If all 5 questions are answered -> show end screen (because 5 >= 5)
         // End screen
-        document.getElementById('questions-card').style = 'display: none'; // Change style of card -> add 'display: none;'
-        document.getElementById('final-card').style = '';   // Change style of card -> remove 'display: none;'
-
-        document.getElementById('amount-of-questions').innerHTML = questions.length;  // Display amount of questions at the final screen
-        document.getElementById('correct-answered-questions').innerHTML = rightAnsweredQuestions;   // Shows amount of right answered questions
-
+        showFinalScreen();
     } else {
-
-        let percent = (currentQuestion +1) / questions.length;   // Percentage for progress bar (e.g. 1/5 = 0.2) / currentQuestion + 1 -> start at 1 not 0! -> endig with 100% at progress bar 
-        percent = Math.round(percent * 100);    // (e.g. 0.2 * 100 = 20%) / Math.round() = numbers are rounded
-        document.getElementById('progress-bar').innerHTML  = `${percent}%`;     // Prints value into progress bar
-        document.getElementById('progress-bar').style = `width: ${percent}%`;   // Change width of progress bar
-
-        let question = questions[currentQuestion];  // Get first element of the JSON array
-        document.getElementById('question-text').innerHTML = question['question'];  // Get the question
-
-        document.getElementById('answer_1').innerHTML = question['answer_1'];   // Get the answers
-        document.getElementById('answer_2').innerHTML = question['answer_2'];
-        document.getElementById('answer_3').innerHTML = question['answer_3'];
-        document.getElementById('answer_4').innerHTML = question['answer_4'];
-
-        document.getElementById('current-question-number').innerHTML = currentQuestion + 1; // Current question number -> + 1 because array starts with 0 
+        updateProgressBar();
+        showNextQuestion(); 
     }
 }
 
@@ -147,3 +129,40 @@ function restartQuiz() {
     rightAnsweredQuestions = 0;
     init();
 }
+
+
+// ================================================================================================================================================================ //
+function showFinalScreen() {
+    document.getElementById('questions-card').style = 'display: none'; // Change style of card -> add 'display: none;'
+    document.getElementById('final-card').style = '';   // Change style of card -> remove 'display: none;'
+
+    document.getElementById('amount-of-questions').innerHTML = questions.length;  // Display amount of questions at the final screen
+    document.getElementById('correct-answered-questions').innerHTML = rightAnsweredQuestions;   // Shows amount of right answered questions
+}
+
+
+function showNextQuestion() {
+    let question = questions[currentQuestion];  // Get first element of the JSON array
+    document.getElementById('question-text').innerHTML = question['question'];  // Get the question
+
+    document.getElementById('answer_1').innerHTML = question['answer_1'];   // Get the answers
+    document.getElementById('answer_2').innerHTML = question['answer_2'];
+    document.getElementById('answer_3').innerHTML = question['answer_3'];
+    document.getElementById('answer_4').innerHTML = question['answer_4'];
+
+    document.getElementById('current-question-number').innerHTML = currentQuestion + 1; // Current question number -> + 1 because array starts with 0
+}
+
+
+function updateProgressBar() {
+    let percent = (currentQuestion +1) / questions.length;   // Percentage for progress bar (e.g. 1/5 = 0.2) / currentQuestion + 1 -> start at 1 not 0! -> endig with 100% at progress bar 
+    percent = Math.round(percent * 100);    // (e.g. 0.2 * 100 = 20%) / Math.round() = numbers are rounded
+    document.getElementById('progress-bar').innerHTML  = `${percent}%`;     // Prints value into progress bar
+    document.getElementById('progress-bar').style = `width: ${percent}%`;   // Change width of progress bar
+}
+
+
+function gameIsOver() {
+    return currentQuestion >= questions.length;
+}
+
