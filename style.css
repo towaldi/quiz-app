@@ -51,3 +51,11 @@ body {
     /* Other */
     color: rgba(255, 255, 255, 1);
 }
+
+.button-right {
+    /* Display & Box Model */
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+}

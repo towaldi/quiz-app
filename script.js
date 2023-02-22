@@ -47,6 +47,14 @@ let questions = [
 let currentQuestion = 0;
 
 
+// Global variable for right answered questions (0 at the beginning of the quiz)
+let rightAnsweredQuestions = 0;
+
+
+// Audio data -> global variable
+let audioSuccess = new Audio('./audio/correct.wav');
+let audioFail = new Audio('./audio/wrong.wav');
+
 // Render onload
 function init() {
     document.getElementById('full-amount-questions').innerHTML = questions.length;  // Show full amount of questions
@@ -60,8 +68,17 @@ function showCurrentQuestion() {
         // End screen
         document.getElementById('questions-card').style = 'display: none'; // Change style of card -> add 'display: none;'
         document.getElementById('final-card').style = '';   // Change style of card -> remove 'display: none;'
-        
+
+        document.getElementById('amount-of-questions').innerHTML = questions.length;  // Display amount of questions at the final screen
+        document.getElementById('correct-answered-questions').innerHTML = rightAnsweredQuestions;   // Shows amount of right answered questions
+
     } else {
+
+        let percent = (currentQuestion +1) / questions.length;   // Percentage for progress bar (e.g. 1/5 = 0.2) / currentQuestion + 1 -> start at 1 not 0! -> endig with 100% at progress bar 
+        percent = Math.round(percent * 100);    // (e.g. 0.2 * 100 = 20%) / Math.round() = numbers are rounded
+        document.getElementById('progress-bar').innerHTML  = `${percent}%`;     // Prints value into progress bar
+        document.getElementById('progress-bar').style = `width: ${percent}%`;   // Change width of progress bar
+
         let question = questions[currentQuestion];  // Get first element of the JSON array
         document.getElementById('question-text').innerHTML = question['question'];  // Get the question
 
@@ -86,10 +103,13 @@ function answer(i) {
     if (selectedQuestionNumber == question['right_answer']) {
         console.log('right answer!!');  // Prints -> right answer
         document.getElementById(i).parentNode.classList.add('bg-success');  // Add CSS class to parent element
+        audioSuccess.play();    // Plays audio
+        rightAnsweredQuestions++;
     } else {
         console.log('wrong answer!!');  // Prints -> wrong answer
         document.getElementById(i).parentNode.classList.add('bg-danger');   // Add CSS class to parent element
         document.getElementById(idOfRightAnswer).parentNode.classList.add('bg-success');    // Highlights also correct answer
+        audioFail.play();   // Plays audio
     }
 
     document.getElementById('next-button').disabled = false;    // Change button state if question selected
@@ -115,4 +135,15 @@ function resetAnswerButtons() {
     document.getElementById('answer_3').parentNode.classList.remove('bg-danger');
     document.getElementById('answer_4').parentNode.classList.remove('bg-success');
     document.getElementById('answer_4').parentNode.classList.remove('bg-danger');
+}
+
+
+// Restart quiz
+function restartQuiz() {
+    document.getElementById('questions-card').style = ''; // Show question card
+    document.getElementById('final-card').style = 'display: none';  // Hide final card
+
+    currentQuestion = 0;    // Reset global variables
+    rightAnsweredQuestions = 0;
+    init();
 }
